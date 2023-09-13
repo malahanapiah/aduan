@@ -51,8 +51,9 @@ class ComplaintController extends Controller
      */
     public function edit(Complaint $complaint)
     {
-       
-        return view('complaint.edit');
+        return view('complaint.edit', [
+            'complaint' => $complaint
+        ]);
     }
 
     /**
@@ -60,7 +61,25 @@ class ComplaintController extends Controller
      */
     public function update(UpdateComplaintRequest $request, Complaint $complaint)
     {
-        //
+       // dd($request->all());
+
+       //1. validate form data
+        $request->validate([
+            'title' => ['required', 'max:100'], 
+            'description' => ['required']
+        ]) ;
+
+       //2. update the data
+
+       $complaint->update([
+        'title' => $request->input('title'),
+        'description' => $request->input('description')
+       ]);
+
+       // 3. redirect user to another page
+
+       return back()->with('berjaya', 'Rekod dikemaskini.');
+       //return to_route('complaint_index')->with('berjaya', 'Rekod dikemaskini.');
     }
 
     /**
